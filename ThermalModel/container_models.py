@@ -109,8 +109,8 @@ def container_thermalnetwork(T, t, inputs, M, model_atmosferic):
     TT = TT_row - TT_col
     TTR =  pow(TT_row,4) - pow(TT_col,4)
     
-    dT = 1/C * ( np.dot(H, TT) + np.dot(K, TT) + np.dot(R, TTR) + Q ) 
-
+    dT = 1./C * ( sum(np.dot(H, TT)) + sum(np.dot(K, TT)) + sum(np.dot(R, TTR)) + Q ) 
+    dT[5] = 0
 
     return dT
 
