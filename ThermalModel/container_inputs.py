@@ -60,7 +60,6 @@ def input_geometry():
     
     
     
-    
     # ------------------------------   
     ## THERMAL PROPERTIES
     # ------------------------------
@@ -105,7 +104,6 @@ def input_geometry():
     # ------------------------------   
     ## OUTPUT
     # ------------------------------   
-    
     
     inputs = {
       "Dx_container": Dx_container,  
@@ -158,8 +156,6 @@ def input_geometry():
       "air_hn": air_hn,
       "air_hf": air_hf,
       }
-    
-    
     
     return inputs
 
