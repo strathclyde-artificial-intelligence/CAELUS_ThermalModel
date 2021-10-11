@@ -6,29 +6,31 @@ Created on Sat Oct  9 16:40:24 2021
 
 from math import pi
 import numpy as np
+from functools import lru_cache
 
 class ODEMatrices():
 
     @staticmethod
-    def SpreadingResistance(r1, r2, t, k, h):
-        ϵ = r1/r2
-        τ = t / r2
-        Bi = (h * r2) / k
-        λ = pi + 1/(1/ (ϵ * pow(pi,0.5)) )
-        ϕ = (np.tanh(λ * τ) + λ/Bi) / (1+ λ/Bi * np.tanh(λ*τ))
-        ψ = (ϵ*τ)/pow(pi,0.5) + 1/pow(pi,0.5)*(1-ϵ)*ϕ
+    def spreading_resistance(r1, r2, t, k, h):
+        epsilon = r1/r2
+        tau = t / r2
+        bi = (h * r2) / k
+        l = pi + 1/(1/ (epsilon * pow(pi,0.5)) )
+        phi = (np.tanh(l * tau) + l/bi) / (1+ l/bi * np.tanh(l*tau))
+        psi = (epsilon*tau)/pow(pi,0.5) + 1/pow(pi,0.5)*(1-epsilon)*phi
 
-        Rsp = ψ / (k*r1*pow(pi,0.5))
-        return Rsp
+        return psi / (k*r1*pow(pi,0.5))
 
     def __init__(self, params):
         self.__params = params
 
+    @lru_cache
     def get_param(self, param_name):
         if param_name in self.__params:
             return self.__params[param_name]
         raise Exception(f'Requested invalid parameter name "{param_name}"')
 
+    @lru_cache
     def get_C(self):
         # -------------- heat capcity ------------------------
         # node 1 : external wall / payload
@@ -57,15 +59,15 @@ class ODEMatrices():
         # -------------------------------------------------
         return np.array([C1, C2, C3, C4, C5, 0])
 
-
+    @lru_cache
     def get_K(self):
         # from "square" to "circular" geometry
         r_contianer = pow(self.get_param("container_Aout") / pi, 0.5)
         r_brick = pow(self.get_param("payload_A_cond") / pi, 0.5)
         r_PCM = pow(self.get_param("PCM_A_cond") / pi, 0.5)
 
-        R_c2b = ODEMatrices.SpreadingResistance(r_brick, r_contianer, self.get_param('Dx_container'), self.get_param("container_k"), self.get_param("air_hf"))
-        R_PCM2b = ODEMatrices.SpreadingResistance(r_brick, r_PCM, self.get_param("PCM_z"), self.get_param("PCM_ks"), self.get_param("air_hn"))
+        R_c2b = ODEMatrices.spreading_resistance(r_brick, r_contianer, self.get_param('Dx_container'), self.get_param("container_k"), self.get_param("air_hf"))
+        R_PCM2b = ODEMatrices.spreading_resistance(r_brick, r_PCM, self.get_param("PCM_z"), self.get_param("PCM_ks"), self.get_param("air_hn"))
 
         # ----------------- conductivity ------------------------
 
@@ -100,7 +102,7 @@ class ODEMatrices():
         ])
         # ---------------------------------------------------------
 
-
+    @lru_cache
     def get_H(self):
         # --------- convection -------------
         # node 1 (internal wall)  <-> node 6 (external air)
@@ -129,9 +131,10 @@ class ODEMatrices():
         ])
         # ----------------------------------
 
-
+    @lru_cache
     def get_R(self):
         return [np.zeros(6) for _ in range(6)]
-
+    
+    @lru_cache
     def get_Q(self):
         return np.zeros(6)
