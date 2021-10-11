@@ -24,7 +24,6 @@ class ODEMatrices():
     def __init__(self, params):
         self.__params = params
 
-    @lru_cache
     def get_param(self, param_name):
         if param_name in self.__params:
             return self.__params[param_name]
