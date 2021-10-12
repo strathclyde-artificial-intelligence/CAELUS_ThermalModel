@@ -8,6 +8,7 @@ from ThermalModel.thermal_model import thermal_model
 
 
 def test_integration():
+
     # RUN EXAMPLE
     params = input_geometry()
     tm = ThermalSim(params, model_atmosferic, thermal_model)

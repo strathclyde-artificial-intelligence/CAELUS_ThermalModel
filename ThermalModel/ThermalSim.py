@@ -14,7 +14,6 @@ class ThermalSim:
         self.__atmos_model = atmos_model
         self.__PCM_model = PCM_model
         self.__thermal_model = thermal_model
-        #self.ode_matrices = ODEMatrices(params)
 
     def solve(self,
               time_start,
@@ -24,5 +23,5 @@ class ThermalSim:
               initial_state=[0] * SIM_STATE_SPACE_SIZE):
         t = np.linspace(time_start, time_end)
         sol = odeint(self.__thermal_model, initial_state, t,
-                     args=(self.__PCM_model, self.__atmos_model, self.__params), tfirst=True, hmax=max_step, hmin=min_step, full_output=1)
+                     args=(self.__PCM_model, self.__atmos_model, self.__params), tfirst=True, hmax=max_step, hmin=min_step)
         return t, sol

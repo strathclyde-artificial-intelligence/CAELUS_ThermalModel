@@ -3,7 +3,7 @@
 """
 Created on Sat Oct  9 16:40:24 2021
 
-@author: gianlucafilippi
+@author: Gianluca Filippi
 """
 
 from .ODEMatrices import ODEMatrices
@@ -12,21 +12,20 @@ from .ODEMatrices import ODEMatrices
 """
 define parameters
 """
+
+
 def input_geometry():
+
+    # ------------------------------
+    # DEFINE INPUTS
+    # ------------------------------
 
     Dx_container = .02
 
-    # ------------------------------
-    ## GEOMETRY 
-    # ------------------------------
-    
     # container
-    container_xin = .236                     # x in [m]
-    container_yin = .158                     # y in
-    container_zin = .089                     # z in
-    container_xout = container_xin + 2*Dx_container    # x out
-    container_yout = container_yin + 2*Dx_container    # y out
-    container_zout = container_zin + 2*Dx_container    # z out
+    container_xin = .236  # x in [m]
+    container_yin = .158  # y in
+    container_zin = .089  # z in
  
     # payload
     payload_x = .100    # x [m]
@@ -37,72 +36,66 @@ def input_geometry():
     PCM_x = .198        # x  [m]
     PCM_y = .156        # y
     PCM_z = .011        # z    
-    
 
     # container
-    container_Ain      = 2 * (container_xin * container_yin + container_xin * container_zin + container_yin * container_zin)
-    container_Aout     = 2 * (container_xout * container_yout + container_xout * container_zout + container_yout * container_zout)
+    container_k = 0.015      # conductivity k [W m-1 K-1] 0.039
+    container_epsilon = .05  # emissivity ϵ
+    container_cp = 1.5e3     # specific heat cp [J kg-1 K-1]
+    container_rho = 20.0     # density ρ [kg m-3]
+
+    # payload
+    payload_k = 5          # conductivity k [W m-1 K-1]
+    payload_epsilon = .05  # emissivity ϵ
+    payload_cp = 4.186e3   # cp [J kg-1 K-1]
+    payload_rho = 1000     # density ρ [kg m-3]
+
+    # PCM
+    PCM_ks = .126      # conductivity solid k [W m-1 K-1]
+    PCM_kl = .145      # conductivity liquid k [W m-1 K-1]
+    PCM_epsilon = .05  # emissivity ϵ
+    PCM_cps = 1.4e3    # specific heat solid cp [J kg-1 K-1]
+    PCM_cpl = 1.8e3    # specific heat liquid  cp [J kg-1 K-1]
+    PCM_rho = 868      # density ρ [kg m-3]
+    PCM_t1 = 4         # T1 melting window
+    PCM_t2 = 6         # T2 melting window
+    PCM_h = 183e3      # H latent
+
+    # air
+    air_cp = 1.5e3     # specific heat  cp [J kg-1 K-1]
+    air_rho = 1.225    # density ρ [kg m-3]
+    air_hn = 4         # coefficient of natural convection
+    air_hf = 25        # coefficient of forced convection
+
+    # ------------------------------
+    # THERMAL PROPERTIES
+    # ------------------------------
+
+    # container
+    container_xout = container_xin + 2*Dx_container    # x out
+    container_yout = container_yin + 2*Dx_container    # y out
+    container_zout = container_zin + 2*Dx_container    # z out
+    container_Ain = 2 * (container_xin * container_yin + container_xin * container_zin + container_yin * container_zin)
+    container_Aout = 2 * (container_xout * container_yout + container_xout * container_zout + container_yout * container_zout)
     container_Ain_cond = payload_x * payload_y
     container_Ain_conv = container_Ain - container_Ain_cond
-    container_V_in     = container_xin * container_yin * container_zin
-    container_V        = container_xout * container_yout * container_zout - container_V_in
+    container_V_in = container_xin * container_yin * container_zin
+    container_V = container_xout * container_yout * container_zout - container_V_in
     
     # payload
     payload_A_cond = container_Ain_cond
     payload_A_conv = 2 * (payload_x * payload_z + payload_y * payload_z)
-    payload_V      = payload_x * payload_y * payload_z
+    payload_V = payload_x * payload_y * payload_z
     
     # PCM
     PCM_A_cond = payload_A_cond
     PCM_A_conv = 2 * (PCM_x * PCM_y + PCM_x * PCM_z + PCM_y * PCM_z) - payload_A_cond
-    PCM_V      = PCM_x * PCM_y * PCM_z
+    PCM_V = PCM_x * PCM_y * PCM_z
 
     # air
     air_V = container_V_in - payload_V - PCM_V
 
     # ------------------------------   
-    # THERMAL PROPERTIES
-    # ------------------------------
-
-    # container
-    container_k       = 0.015   # conductivity k [W m-1 K-1] 0.039
-    container_epsilon = .05     # emissivity ϵ
-    container_cp      = 1.5e3   # specific heat cp [J kg-1 K-1]
-    container_rho     = 20.0    # density ρ [kg m-3]
-
-    # payload
-    payload_k       = 5                        # conductivity k [W m-1 K-1]
-    payload_epsilon = .05                      # emissivity ϵ
-    payload_cp      = 4.186e3                  # cp [J kg-1 K-1]
-    payload_rho     = 1000                     # density ρ [kg m-3]
-
-
-    
-    # PCM
-    PCM_ks = .126                     # conductivity solid k [W m-1 K-1]
-    PCM_kl = .145                     # conductivity liquid k [W m-1 K-1]
-    PCM_epsilon = .05                      # emissivity ϵ
-    PCM_cps = 1.4e3                    # specific heat solid cp [J kg-1 K-1]
-    PCM_cpl = 1.8e3                    # specific heat liquid  cp [J kg-1 K-1]
-    PCM_rho = 868                      # density ρ [kg m-3]
-    PCM_t1 = 4                        # T1 melting window
-    PCM_t2 = 6                        # T2 melting window
-    PCM_h = 183e3                    # H latent
-
-
-
-    # air
-    air_cp = 1.5e3                    # specific heat  cp [J kg-1 K-1]
-    air_rho = 1.225                    # density ρ [kg m-3]
-    air_hn = 4                        # coefficient of natural convection
-    air_hf = 25                       # coefficient of forced convection
-
-
-
-
-
-    # ------------------------------   
-    ## OUTPUT
+    # OUTPUT
     # ------------------------------   
     
     inputs = {
@@ -155,13 +148,10 @@ def input_geometry():
       "air_rho": air_rho,
       "air_hn": air_hn,
       "air_hf": air_hf,
-      
       }
- 
-    
-    
+
     # ------------------------------   
-    # add MATRICES
+    # add ODE MATRICES
     # ------------------------------   
     
     ode_matrices = ODEMatrices(inputs)
@@ -171,8 +161,6 @@ def input_geometry():
     inputs['matrix_H'] = ode_matrices.get_H()
     inputs['matrix_R'] = ode_matrices.get_R()
     inputs['matrix_Q'] = ode_matrices.get_Q()
-
-
 
     return inputs
 
