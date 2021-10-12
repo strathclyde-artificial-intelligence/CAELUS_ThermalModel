@@ -1,4 +1,6 @@
+from math import inf
 import numpy as np
+
 
 def thermal_model(t, T, PCM_model, atmos_model, params):
     """

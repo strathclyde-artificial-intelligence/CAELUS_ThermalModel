@@ -21,9 +21,9 @@ def input_geometry():
     # ------------------------------
     
     # container
-    container_xin  = .236                     # x in [m]
-    container_yin  = .158                     # y in
-    container_zin  = .089                     # z in
+    container_xin = .236                     # x in [m]
+    container_yin = .158                     # y in
+    container_zin = .089                     # z in
     container_xout = container_xin + 2*Dx_container    # x out
     container_yout = container_yin + 2*Dx_container    # y out
     container_zout = container_zin + 2*Dx_container    # z out
@@ -40,11 +40,12 @@ def input_geometry():
     
 
     # container
-    container_Ain      = 2 * ( container_xin * container_yin + container_xin * container_zin + container_yin * container_zin )
-    container_Aout     = 2 * ( container_xout * container_yout + container_xout * container_zout + container_yout * container_zout )
+    container_Ain      = 2 * (container_xin * container_yin + container_xin * container_zin + container_yin * container_zin)
+    container_Aout     = 2 * (container_xout * container_yout + container_xout * container_zout + container_yout * container_zout)
     container_Ain_cond = payload_x * payload_y
     container_Ain_conv = container_Ain - container_Ain_cond
-    container_V        = container_xout * container_yout * container_zout - container_xin * container_yin * container_zin 
+    container_V_in     = container_xin * container_yin * container_zin
+    container_V        = container_xout * container_yout * container_zout - container_V_in
     
     # payload
     payload_A_cond = container_Ain_cond
@@ -53,19 +54,16 @@ def input_geometry():
     
     # PCM
     PCM_A_cond = payload_A_cond
-    PCM_A_conv = 2 * (PCM_x * PCM_y + PCM_x * PCM_z + PCM_y * PCM_z)
+    PCM_A_conv = 2 * (PCM_x * PCM_y + PCM_x * PCM_z + PCM_y * PCM_z) - payload_A_cond
     PCM_V      = PCM_x * PCM_y * PCM_z
 
     # air
-    air_V      = container_V - payload_V - PCM_V
-    
-    
-    
+    air_V = container_V_in - payload_V - PCM_V
+
     # ------------------------------   
-    ## THERMAL PROPERTIES
+    # THERMAL PROPERTIES
     # ------------------------------
-    
-    
+
     # container
     container_k       = 0.015   # conductivity k [W m-1 K-1] 0.039
     container_epsilon = .05     # emissivity ϵ
