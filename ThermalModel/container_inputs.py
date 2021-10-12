@@ -6,6 +6,7 @@ Created on Sat Oct  9 16:40:24 2021
 @author: gianlucafilippi
 """
 
+from .ODEMatrices import ODEMatrices
 
 
 """
@@ -56,7 +57,7 @@ def input_geometry():
     PCM_V      = PCM_x * PCM_y * PCM_z
 
     # air
-    air_V      = PCM_x * PCM_y * PCM_z
+    air_V      = container_V - payload_V - PCM_V
     
     
     
@@ -97,6 +98,7 @@ def input_geometry():
     air_rho = 1.225                    # density ρ [kg m-3]
     air_hn = 4                        # coefficient of natural convection
     air_hf = 25                       # coefficient of forced convection
+
 
 
 
@@ -155,8 +157,25 @@ def input_geometry():
       "air_rho": air_rho,
       "air_hn": air_hn,
       "air_hf": air_hf,
+      
       }
+ 
     
+    
+    # ------------------------------   
+    # add MATRICES
+    # ------------------------------   
+    
+    ode_matrices = ODEMatrices(inputs)
+
+    inputs['matrix_C'] = ode_matrices.get_C()
+    inputs['matrix_K'] = ode_matrices.get_K()
+    inputs['matrix_H'] = ode_matrices.get_H()
+    inputs['matrix_R'] = ode_matrices.get_R()
+    inputs['matrix_Q'] = ode_matrices.get_Q()
+
+
+
     return inputs
 
 

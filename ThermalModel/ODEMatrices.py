@@ -56,7 +56,7 @@ class ODEMatrices():
             * self.get_param("air_cp")   # J K-1
         
         # -------------------------------------------------
-        return np.array([C1, C2, C3, C4, C5, 0])
+        return np.array([C1, C2, C3, C4, C5, 100000])
 
     @lru_cache
     def get_K(self):
