@@ -15,6 +15,11 @@ def test_integration():
     initial_time = 0  # [seconds]
     final_time = 10000  # [seconds]
     initial_state = [20, 20, 5, 0, 20]  # temperature: array of 5 elements [Kelvin]
+                                        # y[0]: external wall
+                                        # y[1]: internal wall
+                                        # y[2]: payload
+                                        # y[3]: PCM
+                                        # y[4]: air
 
     # RUN EXAMPLE
 
